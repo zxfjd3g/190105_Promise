@@ -9,27 +9,45 @@
 <script type="text/javascript" src="./Promise.js"></script>
 <script type="text/javascript">
   const p = new Promise((resolve, reject) => {
-    setTimeout(() => {
+    console.log('excutor()')
+    //setTimeout(() => {
       const time = Date.now()
       if(time%3 === 0) { // 成功
+
+        console.log('resolve()之前')
         resolve('成功的数据')
+        console.log('resolve()之后')
+
       } else if (time%3===1){ // 失败
+        console.log('reject()之前')
         reject('失败的原因数据')
+        console.log('reject()之后')
       } else { // 出错
         throw new Error('出错啦...')
       }
-    }, 1000)
+   // }, 1000)
   })
+  console.log('new Promise()之后')
 
   // 立即指定成功/失败的回调函数, 此时是pending, 当前不会调用回调函数
   p.then(
-    value => {},
-    reason => {},
+    value => {
+      console.log('onResolved()', value)
+    },
+    reason => {
+      console.log('onRejected()', reason)
+    },
   )
   p.then(
-    value => {},
-    reason => {},
+    value => {
+      console.log('onResolved()2', value)
+    },
+    reason => {
+      console.log('onRejected()2', reason)
+    },
   )
+
+  console.log('.then()之后')
   /*
 
   [

@@ -5,6 +5,7 @@
   <title>原生Promise_使用测试</title>
 </head>
 <body>
+<!--
 
 <script type="text/javascript">
   // 创建promise对象
@@ -37,5 +38,33 @@
   console.log('then()之后')
 
 </script>
+-->
+
+<script type="text/javascript">
+  new Promise((resolve, reject) => { // 在Promise内部会同步执行executor函数
+    resolve(1)
+    // reject(1)
+    // throw 1
+  }).then(
+    value => {
+      console.log('onResolved()', value)
+      // return 2
+      // throw 2
+      // return Promise.resolve(2)
+      return Promise.reject(2)
+    },
+    reason => {
+      console.log('onRejected()', reason)
+    },
+  ).then(
+    value => {
+      console.log('onResolved()2', value)
+    },
+    reason => {
+      console.log('onRejected()2', reason)
+    }
+  )
+</script>
+
 </body>
 </html>

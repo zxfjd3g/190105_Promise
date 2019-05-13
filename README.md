@@ -27,7 +27,7 @@
     当异步任务成功时, 我们应该调用resolve函数, 并传入需要的value
     resolve函数内部: 
         同步修改promise对象的状态为resolved和保存成功value, 
-        异步执行已经存储的所有onFulfilled回调函数
+        异步执行已经存储的所有onResolved回调函数
     
 ## 4). reject: 拒绝
     由Promise函数内部定义, 但由我们调用的函数
@@ -41,7 +41,10 @@
     作用: 用来指定promise的状态为resolved或rejected时的回调函数
     注意: 
         then()方法的返回值为新的promise对象, 这样可以进行.then()的链式调用
-        返回的promise的结果状态和值由回调函数的结果决定
+        返回的promise的结果状态和值由回调函数的执行结果决定
+            返回promise: 将返回promise的结果值作为then()返回promise的结果
+            返回其它: 成功, 值为返回的结果
+            抛出异常:  失败, 值为抛出的数据
 
 ## 6). onResolved: 当已解决时
     由then()的第一个参数指定的回调函数: (value) => {}

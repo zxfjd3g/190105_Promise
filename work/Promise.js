@@ -52,7 +52,7 @@
 
         // 立即异步执行所有存储在callbacks中待执行的onRejected函数
         setTimeout(() => {
-          callbacks.forEach(cbObj => cbObj.onRejected(reason))
+          self.callbacks.forEach(cbObj => cbObj.onRejected(reason))
         })
       }
     }
@@ -71,7 +71,49 @@
     返回值是一个新的promise对象
    */
   Promise.prototype.then = function (onResolved, onRejected) {
+    const self = this
+    // 得到当前状态
+    const {status} = self
 
+    let promise2
+
+    if(status==='pending') { // 当前状态是未确定
+      promise2 = new Promise((resolve, reject) => {
+
+      })
+
+    } else if(status === 'resolved') { // 当前promise已经成功了
+
+      promise2 = new Promise((resolve, reject) => {
+        // 立即异步调用成功的回调
+        setTimeout(() => {
+          /*
+          onResolved()执行的结果
+            返回promise
+            返回其它
+            抛出异常: try ... catch
+           */
+          try {
+            const result = onResolved(self.data)
+            if(result instanceof Promise) {
+              result.then(resolve, reject)
+            } else {
+              resolve(result)
+            }
+
+          } catch (error) {
+            reject(error)
+          }
+
+        })
+      })
+    } else { // 'rejected'
+      promise2 = new Promise((resolve, reject) => {
+
+      })
+    }
+
+    promise2
   }
 
   /*
