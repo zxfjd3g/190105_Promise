@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>自定义Promise_使用测试</title>
+</head>
+<body>
+
+<script type="text/javascript" src="./Promise.js"></script>
+<script type="text/javascript">
+  const p = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const time = Date.now()
+      if(time%3 === 0) { // 成功
+        resolve('成功的数据')
+      } else if (time%3===1){ // 失败
+        reject('失败的原因数据')
+      } else { // 出错
+        throw new Error('出错啦...')
+      }
+    }, 1000)
+  })
+
+  // 立即指定成功/失败的回调函数, 此时是pending, 当前不会调用回调函数
+  p.then(
+    value => {},
+    reason => {},
+  )
+  p.then(
+    value => {},
+    reason => {},
+  )
+  /*
+
+  [
+    {
+      onRsolved () {},
+      onRejected () {},
+    },
+    {
+      onRsolved () {},
+      onRejected () {},
+    },
+  ]
+   */
+
+</script>
+</body>
+</html>
