@@ -82,7 +82,8 @@
       console.log(`Got the final result: ${finalResult}`);
     })
     .catch(failureCallback);
-</script>-->
+</script>
+-->
 
 
 <!--promise相关代码执行顺序-->
@@ -122,11 +123,11 @@
 <!--
 使用promise简单封装XMLHttpRequest对象(只支持GET)
 -->
-
 <!--
 <script type="text/javascript">
   const promiseAjax = function (url) {
     return new Promise(function (resolve, reject) {
+
       const handler = function () {
         if (this.readyState === 4) {
           if (this.status === 200) {
@@ -146,19 +147,19 @@
     })
   }
 
-  promiseAjax('https://api.github.com/search/users2?q=aa').then(value => {
+  promiseAjax('https://api.github.com/search/users?q=aa').then(value => {
     console.log('成功了', value)
   }, reason => {
     console.log('失败了', reason)
   })
-</script>
--->
+</script>-->
 
 
 <!--
 一旦异常抛出，promise链就会停下来，直接调用链中的catch处理程序来继续当前执行
 -->
 <!--
+
 <script type="text/javascript">
   new Promise((resolve, reject) => {
     console.log('excutor() resolve() before')
@@ -178,28 +179,21 @@
       console.log('catch onRejected()')
     })
     .then(() => {
-      console.log('then3 onRejected()')
+      console.log('then3 onResolved()')
     })
-</script>-->
+</script>
+-->
 
 <!--
 延迟读取异步数据: 在.then()之前promise已变为了fulfilled状态, 后面一旦指定onResolved回调也会异步执行
 -->
-<!--
 <script type="text/javascript">
   // const p1 = Promise.resolve('abc')
   const p1 = new Promise((resolve, reject) => {
-    resolve('abc')
+    setTimeout(() => {
+      resolve('abc')
+    }, 500)
   })
-  p1.then(value => {
-    console.log('0000', value)
-  })
-  console.log('11', p1)
-
-
-  setTimeout(() => {
-    console.log('22', p1)
-  }, 100)
 
   setTimeout(() => {
     p1.then(value => {
@@ -210,7 +204,6 @@
     console.log('then()之后')
   }, 1000)
 </script>
--->
 
 
 <!--
