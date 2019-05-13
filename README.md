@@ -117,9 +117,15 @@
             c. 将此结果作为then()返回的promise的结果
         3). pending
             a. 将onResolved和onRejected保存到p的callbacks中
-
+            b. 在onResolved和onRejected中做前面一样的处理
 ## 4). Promise.resolve()/rejected()的实现
-## 5). Promise.all()的实现
+    1). 创建一个新的promise对象返回
+    2). 在执行器内通过执行resolve/reject确定promise的状态和结果
 
-
-需求: 一次发多个异步ajax请求, 只有当所有请求都成功, 来进行界面的正常处理, 只要有一个失败, 就直接进行错误
+## 5). Promise.all(promises)的实现
+    需求: 一次发多个异步ajax请求, 只有当所有请求都成功, 来进行界面的正常处理, 只要有一个失败, 就直接进行错误
+    1). 创建一个新的promise对象并返回
+    2). 在执行器内遍历所有promises, 并得到每个promise的结果
+    3). 如果有一个结果为失败, 直接reject(reason)
+    4). 如果当前promise成功了, 保存value到数组values中对应的位置
+    5). 只有当所有promise都成功了, resolve(values)
