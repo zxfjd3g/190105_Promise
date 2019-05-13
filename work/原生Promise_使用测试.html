@@ -41,7 +41,7 @@
 -->
 
 <script type="text/javascript">
-  new Promise((resolve, reject) => { // 在Promise内部会同步执行executor函数
+  /*new Promise((resolve, reject) => { // 在Promise内部会同步执行executor函数
     // resolve(1)  // 指定成功及成功的value
     reject(1) // 指定失败及失败的reason
     // throw 1 // 抛出异常
@@ -62,6 +62,19 @@
     },
     reason => {
       console.log('onRejected()2', reason)
+    }
+  )*/
+
+  const p1 = Promise.resolve(3)
+  const p2 = Promise.resolve(Promise.resolve(5))
+  const p3 = Promise.reject(6)
+
+  Promise.all([p1, 'abc', p3, p2]).then(
+    values => {
+      console.log('onResolved()', values)
+    },
+    reason => {
+      console.log('onRejected()', reason)
     }
   )
 </script>

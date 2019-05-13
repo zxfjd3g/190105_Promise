@@ -73,6 +73,12 @@
   Promise.prototype.then = function (onResolved, onRejected) {
     const self = this
     let promise2
+
+    // 如果onResolved/onRejected不是函数, 专门指定一个函数
+    onResolved = typeof onResolved === 'function' ? onResolved : value => value
+    onRejected = typeof onRejected === 'function' ? onRejected : reason => {throw reason}
+
+
     if (self.status==='resolved') {
       promise2 = new Promise((resolve, reject) => {
         // 立即异步调用成功的回调
@@ -161,14 +167,24 @@
   返回一个指定了成功结果值的promise对象
    */
   Promise.resolve = function (value) {
+    return new Promise((resolve, reject) => {
+      // 如果接收的value是一个promise, 将这个promise结果作为返回promise的结果
+      if (value instanceof Promise) {
+        value.then(resolve, reject)
+      } else {
+        resolve(value)
+      }
 
+    })
   }
 
   /*
   返回一个指定了失败结果原因的promise对象
    */
   Promise.reject = function (reason) {
-
+    return new Promise((resolve, reject) => {
+      reject(reason)
+    })
   }
 
   /*
@@ -177,6 +193,30 @@
    */
   Promise.all = function (promises) {
 
+    const length = promises.length // 所有promies个数
+    let resolvedCount = 0 // 保存已成功promise的个数
+    const values = new Array(length) // 保存所有promise成功数据的数组
+
+    return new Promise((resolve, reject) => {
+      // 遍历所有promises
+      promises.forEach((p, index) => {
+        // promises数组中的元素可能不是promise
+        Promise.resolve(p).then(
+          value => {
+            // 保存成功的数据
+            values[index] = value
+            resolvedCount++
+            // 当所有promise都成功了
+            if (resolvedCount===length) {
+              resolve(values)
+            }
+          },
+          reason => {
+            reject(reason)
+          }
+        )
+      })
+    })
   }
 
   // 暴露Promise

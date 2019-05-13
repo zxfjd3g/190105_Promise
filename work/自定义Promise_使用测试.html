@@ -8,7 +8,7 @@
 
 <script type="text/javascript" src="./Promise.js"></script>
 <script type="text/javascript">
-  const p = new Promise((resolve, reject) => {
+  /*const p = new Promise((resolve, reject) => {
     console.log('excutor()')
     //setTimeout(() => {
       const time = Date.now()
@@ -40,13 +40,23 @@
   ).then(
     value => {
       console.log('onResolved()2', value)
+      throw 5
     },
     reason => {
       console.log('onRejected()2', reason)
     },
+  ).catch(
+    reason => {
+      console.log('catch onRejected()3', reason)
+      throw 6
+    }
+  ).catch(
+    reason => {
+      console.log('catch onRejected()4', reason)
+    }
   )
 
-  console.log('.then()之后')
+  console.log('.then()之后')*/
   /*
 
   [
@@ -60,6 +70,25 @@
     },
   ]
    */
+
+
+  const p1 = Promise.resolve(3)
+  const p2 = Promise.resolve(Promise.resolve(5))
+  const p3 = Promise.reject(6)
+
+//  p1.then(value => console.log(value))
+//  p2.then(value => console.log(value))
+//  p3.catch(reason => console.log(reason))
+
+  // Promise.all([p1, 'abc', p3, p2]).then(
+  Promise.all([p1, 'abc', p2]).then(
+    values => {
+      console.log('onResolved()', values)
+    },
+    reason => {
+      console.log('onRejected()', reason)
+    }
+  )
 
 </script>
 </body>
