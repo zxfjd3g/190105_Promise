@@ -78,7 +78,45 @@
 
 # 2. 自定义Promise
 ## 1). 整体结构
+    function Promise (excutor) {}
+    Promise.prototype.then = function (onResolved, onRejected) {}
+    Promise.prototype.catch = function (onRejected) {}
+    Promise.resolve = function (value) {}
+    Promise.reject = function (reason) {}
+    Promise.all = function (promises) {}
+    
 ## 2). Promise函数的实现
+    初始化对象的属性:
+        status: 'pending' 对象的状态(resolved/rejected)
+        data: undefined  成功/失败的数据
+        callbacks: []  用来保存待执行的成功和失败的回调函数  {onResolved(value){}, onRejected(reason){}}
+    定义2个函数
+        function resolve (value) {}
+        function reject (reason) {}
+    立即同步执行excutor(resolve, reject)
+        使用try...catch捕获异常, 执行: reject(error)
+    resolve函数实现
+        立即同步指定成功的状态: status: 'resolved'
+        立即同步指定成功的数据: data: value
+        立即异步执行callbacks中包含所有待执行onResolved函数
+    reject函数的实现
+        立即同步指定成功的状态: status: 'rejected'
+        立即同步指定成功的数据: data: reason
+        立即异步执行callbacks中包含所有待执行onRejected函数
+        
 ## 3). promise.then()/catch()的实现
+    1). 返回一个新的promise对象
+    2). 根据当前promise的状态来处理
+        1). resolved
+            a. 立即异步调用onResolved(p.data)
+            b. 得到onResolved()执行的结果
+            c. 将此结果作为then()返回的promise的结果
+        2). rejected
+            a. 立即异步调用onRejected(p.data)
+            b. 得到onRejected()执行的结果
+            c. 将此结果作为then()返回的promise的结果
+        3). pending
+            a. 将onResolved和onRejected保存到p的callbacks中
+
 ## 4). Promise.resolve()/rejected()的实现
 ## 5). Promise.all()的实现

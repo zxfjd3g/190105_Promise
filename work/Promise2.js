@@ -73,77 +73,61 @@
   Promise.prototype.then = function (onResolved, onRejected) {
     const self = this
     let promise2
+
+    /*
+    通用处理的函数
+     */
+    function handle(callback, resolve, reject) {
+      try {
+        const x = callback(self.data)
+        if(x instanceof Promise) { // 将x的结果作为promise2的结果
+          /*x.then(
+            value => {
+              resolve(value)
+            },
+            reason => {
+              reject(reason)
+            }
+          )*/
+          x.then(resolve, reject)
+        } else { // 回调函数返回的不是promise
+          resolve(x)
+        }
+      } catch (error) { // 如果出了异常, promise2确定为失败
+        reject(error)
+      }
+
+    }
+
+
     if (self.status==='resolved') {
       promise2 = new Promise((resolve, reject) => {
         // 立即异步调用成功的回调
         setTimeout(() => {
-          try {
-            const x = onResolved(self.data)
-            if(x instanceof Promise) { // 将x的结果作为promise2的结果
-              /*x.then(
-                value => {
-                  resolve(value)
-                },
-                reason => {
-                  reject(reason)
-                }
-              )*/
-              x.then(resolve, reject)
-            } else { // 回调函数返回的不是promise
-              resolve(x)
-            }
-          } catch (error) { // 如果出了异常, promise2确定为失败
-            reject(error)
-          }
-
+          handle(onResolved, resolve, reject)
         })
       })
     } else if (self.status==='rejected') {
       promise2 = new Promise((resolve, reject) => {
         // 立即异步调用成功的回调
         setTimeout(() => {
-          try {
-            const x = onRejected(self.data)
-            if(x instanceof Promise) { // 将x的结果作为promise2的结果
-              x.then(resolve, reject)
-            } else { // 回调函数返回的不是promise
-              resolve(x)
-            }
-          } catch (error) { // 如果出了异常, promise2确定为失败
-            reject(error)
-          }
+          handle(onRejected, resolve, reject)
         })
       })
     } else { // pending
+
       promise2 = new Promise((resolve, reject) => {
         // 将回调函数保存起来
         self.callbacks.push({
           onResolved (value) {
-            try {
-              const x = onResolved(self.data)
-              if(x instanceof Promise) { // 将x的结果作为promise2的结果
-                x.then(resolve, reject)
-              } else { // 回调函数返回的不是promise
-                resolve(x)
-              }
-            } catch (error) { // 如果出了异常, promise2确定为失败
-              reject(error)
-            }
+            handle(onResolved, resolve, reject)
           },
           onRejected (reason) {
-            try {
-              const x = onRejected(self.data)
-              if(x instanceof Promise) { // 将x的结果作为promise2的结果
-                x.then(resolve, reject)
-              } else { // 回调函数返回的不是promise
-                resolve(x)
-              }
-            } catch (error) { // 如果出了异常, promise2确定为失败
-              reject(error)
-            }
+            handle(onRejected, resolve, reject)
           }
         })
       })
+
     }
 
     return promise2

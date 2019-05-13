@@ -42,9 +42,9 @@
 
 <script type="text/javascript">
   new Promise((resolve, reject) => { // 在Promise内部会同步执行executor函数
-    resolve(1)
-    // reject(1)
-    // throw 1
+    // resolve(1)  // 指定成功及成功的value
+    reject(1) // 指定失败及失败的reason
+    // throw 1 // 抛出异常
   }).then(
     value => {
       console.log('onResolved()', value)
